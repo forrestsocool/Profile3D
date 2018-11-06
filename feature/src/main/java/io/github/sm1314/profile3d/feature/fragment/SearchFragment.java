@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,9 +21,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
@@ -33,11 +36,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
-import fr.ganfra.materialspinner.MaterialSpinner;
 import io.github.sm1314.profile3d.feature.MainActivity;
 import io.github.sm1314.profile3d.feature.MyApplication;
 import io.github.sm1314.profile3d.feature.R;
 import io.github.sm1314.profile3d.feature.adapter.EmployeeAdapter;
+import io.github.sm1314.profile3d.feature.adapter.MySpinnerAdapter;
 import io.github.sm1314.profile3d.feature.model.Employee;
 import io.github.sm1314.profile3d.feature.model.EmployeeLetterComparator;
 import io.github.sm1314.profile3d.feature.view.WaveSideBarView;
@@ -54,8 +57,10 @@ public class SearchFragment extends DialogFragment {
     MyApplication myApp;
     RecyclerView mRecyclerView;
     WaveSideBarView mSideBarView;
+    TextView mNoResult;
     List<Employee> emplList;
     EmployeeAdapter adapter;
+    MaterialSpinner.OnItemSelectedListener<String> onItemSelectedListener;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -84,8 +89,7 @@ public class SearchFragment extends DialogFragment {
     public static SearchFragment newInstance(String param1, String param2) {
         SearchFragment fragment = new SearchFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -94,35 +98,48 @@ public class SearchFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         myApp = ((MyApplication)getActivity().getApplication());
+        emplList = new ArrayList<>();
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         //下拉选中回调
-//        onItemSelectedListener = new MaterialSpinner.OnItemSelectedListener<String>() {
-//            @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-//                //Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
-//                MaterialSpinner spArmyday = ((View)view.getParent()).findViewById(R.id.spinner_amyday);
-//                MaterialSpinner spDept = ((View)view.getParent()).findViewById(R.id.spinner_dept);
-//                MaterialSpinner spPosi = ((View)view.getParent()).findViewById(R.id.spinner_posi);
-////                String year = (String)spArmyday.getItems().get(spArmyday.getSelectedIndex());
-////                String dept = (String)spArmyday.getItems().get(spArmyday.getSelectedIndex());
-////                String posi = (String)spArmyday.getItems().get(spArmyday.getSelectedIndex());
-//
-//                emplList.clear();
-////                SimpleDateFormat sdf = new SimpleDateFormat("yyyy", Locale.CHINA);
-////                for(Employee e: myApp.employeeList)
-////                {
-////                    if((year.trim().equals("") || sdf.format(e.getArmyday()).equals(year))
-////                        && (dept.trim().equals("") || dept.equals(e.getDepartment().getName()))
-////                        && (posi.trim().equals("") || posi.equals(e.getPosition().getName())))
-////                    {
-////                        emplList.add(e);
-////                    }
-////                }
-////                adapter.notifyDataSetChanged();
-//            }
-//        };
+        onItemSelectedListener = new MaterialSpinner.OnItemSelectedListener<String>() {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                //Snackbar.make(view, "Clicked " + item, Snackbar.LENGTH_LONG).show();
+                MaterialSpinner spArmyday = ((View) view.getParent()).findViewById(R.id.spinner_armyday);
+                MaterialSpinner spDept = ((View) view.getParent()).findViewById(R.id.spinner_dept);
+                MaterialSpinner spPosi = ((View) view.getParent()).findViewById(R.id.spinner_posi);
+                MaterialSpinner spSex = ((View) view.getParent()).findViewById(R.id.spinner_sex);
+                MaterialSpinner spLoc = ((View) view.getParent()).findViewById(R.id.spinner_location);
+                String year = (String)spArmyday.getItems().get(spArmyday.getSelectedIndex());
+                String dept = (String)spDept.getItems().get(spDept.getSelectedIndex());
+                String posi = (String)spPosi.getItems().get(spPosi.getSelectedIndex());
+                String sex = (String)spSex.getItems().get(spSex.getSelectedIndex());
+                String location = (String)spLoc.getItems().get(spLoc.getSelectedIndex());
+
+                emplList.clear();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy", Locale.CHINA);
+                for(Employee e: myApp.employeeList)
+                {
+                    if((year.trim().equals("") || sdf.format(e.getArmyday()).equals(year))
+                        && (sex.trim().equals("") || sex.equals(e.getSex()))
+                        && (location.trim().equals("") || e.getLocation().contains(location))
+                        && (dept.trim().equals("") || dept.equals(e.getDepartment().getName()))
+                        && (posi.trim().equals("") || posi.equals(e.getPosition().getName())))
+                    {
+                        emplList.add(e);
+                    }
+                }
+                Collections.sort(emplList,new EmployeeLetterComparator());
+                adapter = new EmployeeAdapter(getContext(), emplList);
+                mRecyclerView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+                updateIfNoResult(emplList);
+            }
+        };
     }
 
     @Override public void onStart() {
@@ -132,7 +149,20 @@ public class SearchFragment extends DialogFragment {
 //        getDialog().getWindow().setLayout( dm.widthPixels, getDialog().getWindow().getAttributes().height );
     }
 
-
+    public void updateIfNoResult(List<Employee> list)
+    {
+        if(list == null || list.size() == 0)
+        {
+            mNoResult.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.INVISIBLE);
+            mSideBarView.setVisibility(View.INVISIBLE);
+        }
+        else{
+            mNoResult.setVisibility(View.INVISIBLE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mSideBarView.setVisibility(View.VISIBLE);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -143,6 +173,8 @@ public class SearchFragment extends DialogFragment {
         View rootView = inflater.inflate(R.layout.fragment_search, container, true);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mSideBarView = (WaveSideBarView) rootView.findViewById(R.id.side_view);
+        mNoResult = (TextView) rootView.findViewById(R.id.tv_noresult);
+
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         final PinnedHeaderDecoration decoration = new PinnedHeaderDecoration();
@@ -154,7 +186,8 @@ public class SearchFragment extends DialogFragment {
         });
         mRecyclerView.addItemDecoration(decoration);
 
-        emplList = myApp.employeeList;
+        //emplList = myApp.employeeList;
+        emplList.addAll(myApp.employeeList);
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -165,6 +198,7 @@ public class SearchFragment extends DialogFragment {
                     public void run() {
                         adapter = new EmployeeAdapter(getContext(), emplList);
                         mRecyclerView.setAdapter(adapter);
+                        updateIfNoResult(emplList);
                     }
                 });
             }
@@ -193,15 +227,72 @@ public class SearchFragment extends DialogFragment {
 
         //设置spinner选中回调
         //((MaterialSpinner)rootView.findViewById(R.id.spinner_amyday)).setOnItemSelectedListener(onItemSelectedListener);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item,  myApp.deptList);
+        //ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item,  myApp.deptList);
         //adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        MaterialSpinner spinner = (MaterialSpinner) rootView.findViewById(R.id.spinner_dept);
-        spinner.setAdapter(adapter);
+        ((MaterialSpinner) rootView.findViewById(R.id.spinner_armyday)).setAdapter(new MySpinnerAdapter(getContext(),myApp.yearList));//.setItems(myApp.yearList);
+        ((MaterialSpinner) rootView.findViewById(R.id.spinner_dept)).setAdapter(new MySpinnerAdapter(getContext(),myApp.deptList));
+        ((MaterialSpinner) rootView.findViewById(R.id.spinner_posi)).setAdapter(new MySpinnerAdapter(getContext(),myApp.posiList));
+        ((MaterialSpinner) rootView.findViewById(R.id.spinner_sex)).setAdapter(new MySpinnerAdapter(getContext(),getSexOptions()));
+        ((MaterialSpinner) rootView.findViewById(R.id.spinner_location)).setAdapter(new MySpinnerAdapter(getContext(),getLocOptions()));
+
+        ((MaterialSpinner) rootView.findViewById(R.id.spinner_armyday)).setOnItemSelectedListener(onItemSelectedListener);
+        ((MaterialSpinner) rootView.findViewById(R.id.spinner_dept)).setOnItemSelectedListener(onItemSelectedListener);
+        ((MaterialSpinner) rootView.findViewById(R.id.spinner_posi)).setOnItemSelectedListener(onItemSelectedListener);
+        ((MaterialSpinner) rootView.findViewById(R.id.spinner_sex)).setOnItemSelectedListener(onItemSelectedListener);
+        ((MaterialSpinner) rootView.findViewById(R.id.spinner_location)).setOnItemSelectedListener(onItemSelectedListener);
 
         return rootView;
     }
 
+    @NonNull
+    private List<String> getSexOptions() {
+        List<String> sexOptions = new ArrayList<String>();
+        sexOptions.add(" ");
+        sexOptions.add("男");
+        sexOptions.add("女");
+        return sexOptions;
+    }
 
+    @NonNull
+    private List<String> getLocOptions() {
+        List<String> locOptions = new ArrayList<String>();
+        locOptions.add(" ");
+        locOptions.add("北京");
+        locOptions.add("天津");
+        locOptions.add("河北");
+        locOptions.add("山西");
+        locOptions.add("内蒙古");
+        locOptions.add("辽宁");
+        locOptions.add("吉林");
+        locOptions.add("黑龙江");
+        locOptions.add("上海");
+        locOptions.add("江苏");
+        locOptions.add("浙江");
+        locOptions.add("安徽");
+        locOptions.add("福建");
+        locOptions.add("江西");
+        locOptions.add("山东");
+        locOptions.add("河南");
+        locOptions.add("湖北");
+        locOptions.add("湖南");
+        locOptions.add("广东");
+        locOptions.add("广西");
+        locOptions.add("海南");
+        locOptions.add("重庆");
+        locOptions.add("四川");
+        locOptions.add("贵州");
+        locOptions.add("云南");
+        locOptions.add("西藏");
+        locOptions.add("陕西");
+        locOptions.add("甘肃");
+        locOptions.add("青海");
+        locOptions.add("宁夏");
+        locOptions.add("新疆");
+        locOptions.add("香港");
+        locOptions.add("澳门");
+        locOptions.add("台湾");
+        return locOptions;
+    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

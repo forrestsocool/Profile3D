@@ -12,17 +12,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
-import com.facebook.drawee.generic.RoundingParams;
-import com.facebook.drawee.view.SimpleDraweeView;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
+import io.github.sm1314.profile3d.feature.GlideApp;
 import io.github.sm1314.profile3d.feature.MainActivity;
 import io.github.sm1314.profile3d.feature.MyApplication;
 import io.github.sm1314.profile3d.feature.R;
@@ -37,13 +32,27 @@ import io.github.sm1314.tagcloudlib.view.TagsAdapter;
 public class ViewTagsAdapter extends TagsAdapter {
     private List<Employee> dataTotalSet = new ArrayList<>();
     private List<Employee> dataCurrSet = new ArrayList<>();
+    private int showMode;
 
-    public ViewTagsAdapter(List<Employee> list) {
+    public ViewTagsAdapter(List<Employee> list, int mode) {
         dataTotalSet.clear();
         dataCurrSet.clear();
+        showMode = mode;
         for(Employee e: list)
         {
-            if(e.getPosition().getName().contains("在编"))
+            if(mode == 0 && e.getPosition().getName().contains("在编"))
+            {
+                dataTotalSet.add(e);
+            }
+            else if(mode == 1 && e.getDepartment().getName().equals("一营"))
+            {
+                dataTotalSet.add(e);
+            }
+            else if(mode == 2 && e.getDepartment().getName().equals("二营"))
+            {
+                dataTotalSet.add(e);
+            }
+            else if(mode == 3 && e.getDepartment().getName().equals("技术支援营"))
             {
                 dataTotalSet.add(e);
             }
@@ -58,7 +67,7 @@ public class ViewTagsAdapter extends TagsAdapter {
 
     public void refreshData()
     {
-        if(dataTotalSet.size() <= 50)
+        if(dataTotalSet.size() <= 50 || showMode != 0)
         {
             dataCurrSet = dataTotalSet;
             return;
@@ -91,26 +100,37 @@ public class ViewTagsAdapter extends TagsAdapter {
         tvName.setSelected(true);
 
         //开始加载图片
-        Uri uri=Uri.parse(employee.getAvatarUrl(MyApplication.BASE_URL,96));
-        SimpleDraweeView draweeView= (SimpleDraweeView) view.findViewById(R.id.my_image_view);
-        draweeView.setImageURI(uri);
+        Uri uri=Uri.parse(employee.getAvatarUrl(MyApplication.BASE_URL,128));
+//        SimpleDraweeView draweeView= (SimpleDraweeView) view.findViewById(R.id.my_image_view);
+
 
         //获取GenericDraweeHierarchy对象
         //        //圆角图片
-        RoundingParams rp = new RoundingParams();
-        //设置边框颜色 宽度
-        rp.setBorder(Color.WHITE,2);
+        //RoundingParams rp = new RoundingParams();
+//        RoundingParams rp = RoundingParams.fromCornersRadius(10f);
+//        //设置边框颜色 宽度
+//        rp.setBorder(Color.WHITE,2);
+//        rp.setRoundAsCircle(true);
+
         //设置圆角
-        rp.setRoundAsCircle(true);
-        GenericDraweeHierarchy hierarchy = GenericDraweeHierarchyBuilder.newInstance(draweeView.getResources())
-                //设置圆形圆角参数；RoundingParams.asCircle()是将图像设置成圆形
-                .setRoundingParams(rp)
-                //设置淡入淡出动画持续时间(单位：毫秒ms)
-                //.setFadeDuration(5000)
-                .setPlaceholderImage(R.drawable.placeholder)
-                //构建
-                .build();
-        draweeView.setHierarchy(hierarchy);
+//        rp.setRoundAsCircle(true);
+//        GenericDraweeHierarchy hierarchy = GenericDraweeHierarchyBuilder.newInstance(draweeView.getResources())
+//                //设置圆形圆角参数；RoundingParams.asCircle()是将图像设置成圆形
+//                //.setRoundingParams(rp)
+//
+//                //设置淡入淡出动画持续时间(单位：毫秒ms)
+//                .setActualImageScaleType(ScalingUtils.ScaleType.CENTER_CROP)
+//                //.setFadeDuration(5000)
+//                .setPlaceholderImage(R.drawable.placeholder)
+//                //构建
+//                .build();
+//        draweeView.setHierarchy(hierarchy);
+//        draweeView.setImageURI(uri);
+
+
+        ImageView ivAvatar = (ImageView) view.findViewById(R.id.iv_avatar_small);
+        GlideApp.with(context).load(uri).circleCrop().placeholder(employee.getSex().equals("女")? R.drawable.women : R.drawable.man).circleCrop().into(ivAvatar);
+
 
         //设置点击回调
         view.setOnClickListener(new View.OnClickListener() {
@@ -151,7 +171,7 @@ public class ViewTagsAdapter extends TagsAdapter {
  //       view.setAlpha(alpha);
         if(alpha < 0.2 && view.getAlpha() > 0.2)
         {
-            view.setAlpha(0.2f);
+            view.setAlpha(0.1f);
         }
         else if(alpha < 0.75 && view.getAlpha() > 0.75)
         {

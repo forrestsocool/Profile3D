@@ -8,36 +8,35 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
-import com.facebook.drawee.generic.RoundingParams;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.promeg.pinyinhelper.Pinyin;
 
 import java.util.List;
 
 import cc.solart.turbo.BaseTurboAdapter;
 import cc.solart.turbo.BaseViewHolder;
+import io.github.sm1314.profile3d.feature.GlideApp;
 import io.github.sm1314.profile3d.feature.MyApplication;
 import io.github.sm1314.profile3d.feature.R;
 import io.github.sm1314.profile3d.feature.activity.ProfileActivity;
 import io.github.sm1314.profile3d.feature.model.Employee;
 
 public class EmployeeAdapter extends BaseTurboAdapter<Employee, BaseViewHolder> {
-
+    private Context context;
     private static final int AVATAR_BOLDER_WIDTH = 2;
     private static final int AVATAR_DELAY = 500;
 
     public EmployeeAdapter(Context context) {
         super(context);
+        this.context = context;
     }
 
 
     public EmployeeAdapter(Context context, List<Employee> data) {
         super(context, data);
+        this.context = context;
     }
 
     @Override
@@ -61,22 +60,25 @@ public class EmployeeAdapter extends BaseTurboAdapter<Employee, BaseViewHolder> 
             ((EmployeeHolder) holder).empl_posi.setText(item.getPosition().getName());
             ((EmployeeHolder) holder).empl_name.setText(item.getName());
             Uri uri=Uri.parse(item.getAvatarUrl(MyApplication.BASE_URL,96));
-            ((EmployeeHolder) holder).empl_avatar.setImageURI(uri);
-            //圆角图片
-            RoundingParams rp = new RoundingParams();
-            //设置边框颜色 宽度
-            rp.setBorder(Color.WHITE,AVATAR_BOLDER_WIDTH);
-            //设置圆角
-            rp.setRoundAsCircle(true);
-            GenericDraweeHierarchy hierarchy = GenericDraweeHierarchyBuilder.newInstance(((EmployeeHolder) holder).empl_avatar.getResources())
-                    //设置圆形圆角参数；RoundingParams.asCircle()是将图像设置成圆形
-                    .setRoundingParams(rp)
-                    //设置淡入淡出动画持续时间(单位：毫秒ms)
-                    .setFadeDuration(AVATAR_DELAY)
-                    .setPlaceholderImage(R.drawable.placeholder)
-                    //构建
-                    .build();
-            ((EmployeeHolder) holder).empl_avatar.setHierarchy(hierarchy);
+//            ((EmployeeHolder) holder).empl_avatar.setImageURI(uri);
+//            //圆角图片
+//            RoundingParams rp = new RoundingParams();
+//            //设置边框颜色 宽度
+//            rp.setBorder(Color.WHITE,AVATAR_BOLDER_WIDTH);
+//            //设置圆角
+//            rp.setRoundAsCircle(true);
+//            GenericDraweeHierarchy hierarchy = GenericDraweeHierarchyBuilder.newInstance(((EmployeeHolder) holder).empl_avatar.getResources())
+//                    //设置圆形圆角参数；RoundingParams.asCircle()是将图像设置成圆形
+//                    .setRoundingParams(rp)
+//                    //设置淡入淡出动画持续时间(单位：毫秒ms)
+//                    .setFadeDuration(AVATAR_DELAY)
+//                    .setPlaceholderImage(R.drawable.placeholder)
+//                    //构建
+//                    .build();
+//            ((EmployeeHolder) holder).empl_avatar.setHierarchy(hierarchy);
+
+
+            GlideApp.with(context).load(uri).circleCrop().placeholder(item.getSex().equals("女")? R.drawable.women : R.drawable.man).circleCrop().into(((EmployeeHolder) holder).image_avatar);
 
             //设置点击效果
             ((EmployeeHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {
@@ -107,14 +109,14 @@ public class EmployeeAdapter extends BaseTurboAdapter<Employee, BaseViewHolder> 
     }
 
     class EmployeeHolder extends BaseViewHolder {
-        SimpleDraweeView empl_avatar;
         TextView empl_name, empl_posi;
+        ImageView image_avatar;
 
         public EmployeeHolder(View view) {
             super(view);
             empl_name = findViewById(R.id.empl_name);
             empl_posi = findViewById(R.id.empl_posi);
-            empl_avatar = findViewById(R.id.my_image_view);
+            image_avatar = findViewById(R.id.iv_avatar_medium);
         }
     }
 

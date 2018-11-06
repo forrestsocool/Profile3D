@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_yiying"
+        android:checked="true"
+        android:icon="@drawable/ic_input"
+        android:title="一营" />
+    <item
+        android:id="@+id/menu_erying"
+        android:icon="@drawable/ic_router"
+        android:title="二营" />
+    <item
+        android:id="@+id/menu_jishu"
+        android:icon="@drawable/ic_computer"
+        android:title="技术支援营" />
+</menu>

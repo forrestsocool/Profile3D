@@ -12,12 +12,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
-import com.facebook.drawee.generic.RoundingParams;
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.intrusoft.library.FrissonView;
 
@@ -27,6 +28,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
+import io.github.sm1314.profile3d.feature.GlideApp;
 import io.github.sm1314.profile3d.feature.MyApplication;
 import io.github.sm1314.profile3d.feature.R;
 import io.github.sm1314.profile3d.feature.adapter.TextTagsAdapter;
@@ -39,6 +41,8 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
+import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
 public class ProfileActivity extends BaseActivity {
     private static int AVATAR_SIZE = 512;
@@ -66,7 +70,7 @@ public class ProfileActivity extends BaseActivity {
         //获取传参
         Intent intent = this.getIntent();
         employee = (Employee) intent.getParcelableExtra("employee");
-        setUpAvatar();
+
     }
 
     @Override
@@ -92,6 +96,8 @@ public class ProfileActivity extends BaseActivity {
                 setUpContent();
             }
         }, 500);
+
+        setUpAvatar();
     }
 
     @Override
@@ -119,25 +125,38 @@ public class ProfileActivity extends BaseActivity {
     {
         //开始加载图片
         Uri uri=Uri.parse(employee.getAvatarUrl(MyApplication.BASE_URL,AVATAR_SIZE));
-        SimpleDraweeView draweeView= (SimpleDraweeView) findViewById(R.id.my_image_view);
-        draweeView.setImageURI(uri);
 
         //获取GenericDraweeHierarchy对象
         //圆角图片
-        RoundingParams rp = new RoundingParams();
-        //设置边框颜色 宽度
-        rp.setBorder(Color.WHITE,AVATAR_BOLDER_WIDTH);
-        //设置圆角
-        rp.setRoundAsCircle(true);
-        GenericDraweeHierarchy hierarchy = GenericDraweeHierarchyBuilder.newInstance(draweeView.getResources())
-                //设置圆形圆角参数；RoundingParams.asCircle()是将图像设置成圆形
-                .setRoundingParams(rp)
-                //设置淡入淡出动画持续时间(单位：毫秒ms)
-                .setFadeDuration(AVATAR_DELAY)
-                .setPlaceholderImage(R.drawable.placeholder)
-                //构建
-                .build();
-        draweeView.setHierarchy(hierarchy);
+        //RoundingParams rp = new RoundingParams();
+//        RoundingParams rp = RoundingParams.fromCornersRadius(180f);
+//        rp.setPadding(0);
+//        //设置边框颜色 宽度
+//        rp.setBorder(Color.WHITE,AVATAR_BOLDER_WIDTH);
+//        //设置圆角
+//        rp.setRoundAsCircle(false);
+//        GenericDraweeHierarchy hierarchy = GenericDraweeHierarchyBuilder.newInstance(draweeView.getResources())
+//                //设置圆形圆角参数；RoundingParams.asCircle()是将图像设置成圆形
+//                .setRoundingParams(rp)
+//                //设置淡入淡出动画持续时间(单位：毫秒ms)
+//                .setFadeDuration(AVATAR_DELAY)
+//                .setActualImageScaleType(ScalingUtils.ScaleType.CENTER_INSIDE)
+//                .setPlaceholderImage(R.drawable.placeholder)
+//                //构建
+//                .build();
+//        draweeView.setHierarchy(hierarchy);
+
+        ImageView imageView = (ImageView) findViewById(R.id.iv_avatar);
+        RequestOptions requestOptions = new RequestOptions();
+//        requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(128)).;
+        //GlideApp.with(this)
+//                .applyDefaultRequestOptions(requestOptions)
+//                .load(uri)
+//                .placeholder(R.drawable.placeholder)
+//                into(imageView);
+        //setCrossFadeEnabled
+        GlideApp.with(this).load(uri).circleCrop().placeholder(employee.getSex().equals("女")? R.drawable.women : R.drawable.man).circleCrop().transition(withCrossFade(1000)).into(imageView);
+        //Glide.with(this)
     }
 
     private static int getAgeByBirth(Date birthday) {

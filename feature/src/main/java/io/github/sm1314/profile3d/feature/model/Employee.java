@@ -130,6 +130,7 @@ public class Employee implements Parcelable, Serializable{
 
     public String getAvatarUrl(String baseUrl, int size){
         String sizeStr = "";
+        String sex = (getName()!=null && getName().equals("女")) ? "female" : "male";
         switch (size)
         {
             case 96:
@@ -147,7 +148,7 @@ public class Employee implements Parcelable, Serializable{
             default:
                 break;
         }
-        return baseUrl + "/avatar/" + id + ".jpg?size=" + sizeStr;
+        return baseUrl + "/avatar/" + id + ".jpg?size=" + sizeStr + "&sex=" + sex;
     }
 
     @Override

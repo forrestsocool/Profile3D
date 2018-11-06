@@ -7,14 +7,24 @@
     android:clickable="true"
     android:layout_height="48dp"
     android:focusable="true">
-    <com.facebook.drawee.view.SimpleDraweeView
+
+    <RelativeLayout
+        android:id="@+id/my_image_view"
         android:layout_marginTop="6dp"
         android:layout_marginStart="16dp"
-        android:id="@+id/my_image_view"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        fresco:placeholderImage="@drawable/placeholder"
-        />
+        android:padding="1dp"
+        android:background="@drawable/round_border_style">
+        <ImageView
+            android:layout_gravity="center_horizontal"
+            android:foregroundGravity="center_vertical"
+            android:id="@+id/iv_avatar_medium"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:contentDescription="头像" />
+    </RelativeLayout>
+
     <LinearLayout
         android:gravity="start|center_vertical"
         android:orientation="vertical"

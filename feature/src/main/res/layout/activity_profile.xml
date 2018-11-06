@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:frisson="http://schemas.android.com/apk/res-auto"
-    xmlns:fresco="http://schemas.android.com/tools"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:theme="@style/BitLightTheme"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,23 +20,31 @@
         app:tideHeight="50dp"
         app:tintColor="@color/colorPrimary" />
 
-    <View
+    <ImageButton
         android:id="@+id/view_back"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_width="36dp"
         android:layout_height="36dp"
+        android:layout_marginTop="16dp"
         android:layout_marginStart="4dp"
-        android:background="@drawable/ic_action_back" />
+        android:background="?android:attr/selectableItemBackground"
+        android:src="@drawable/ic_navigate_before_black_36dp" />
 
-        <com.facebook.drawee.view.SimpleDraweeView
+        <RelativeLayout
             android:id="@+id/my_image_view"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="100dp"
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="100dp"
-            fresco:placeholderImage="@drawable/placeholder"
-            />
+            android:padding="1dp"
+            android:background="@drawable/round_border_style">
+            <ImageView
+                android:id="@+id/iv_avatar"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/tv_name"
@@ -181,7 +189,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="24dp"
             android:layout_marginTop="26dp"
-            android:drawableLeft="@drawable/ic_group_black_24dp"
+            android:drawableLeft="@drawable/ic_group"
             android:drawablePadding="24dp"
             android:gravity="center"
             android:text="民族"
@@ -193,7 +201,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="24dp"
             android:layout_marginTop="26dp"
-            android:drawableLeft="@drawable/ic_location_24dp"
+            android:drawableLeft="@drawable/ic_location"
             android:drawablePadding="24dp"
             android:gravity="center"
             android:text="籍贯"
@@ -202,10 +210,10 @@
         <TextView
             android:id="@+id/tv_party"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="24dp"
             android:layout_marginLeft="24dp"
             android:layout_marginTop="26dp"
-            android:drawableLeft="@drawable/ic_local_play_black_24dp"
+            android:drawableLeft="@drawable/ic_party"
             android:drawablePadding="24dp"
             android:gravity="center"
             android:text="政治面貌"

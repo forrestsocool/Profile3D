@@ -387,18 +387,28 @@ public class TagCloudView extends ViewGroup implements Runnable, TagsAdapter.OnD
     public void run() {
         if (!isOnTouch && mode != MODE_DISABLE) {
             if (mode == MODE_DECELERATE) {
-                if (mAngleX > 0.08f) {
-                    mAngleX -= 0.04f;
+                if (mAngleX > 0.08f || mAngleX < -0.08f) {
+                    if(mAngleX > 0.08f) {
+                        mAngleX -= 0.04f;
+                    }
+                    else if(mAngleX < -0.08f){
+                        mAngleX += 0.04f;
+                    }
                 }
-                if (mAngleY > 0.08f) {
-                    mAngleY -= 0.04f;
+                if (mAngleY > 0.08f || mAngleY < -0.08f) {
+                    if(mAngleY > 0.08f) {
+                        mAngleY -= 0.04f;
+                    }
+                    else if(mAngleY < -0.08f){
+                        mAngleY += 0.04f;
+                    }
                 }
-                if (mAngleX < -0.08f) {
-                    mAngleX += 0.04f;
-                }
-                if (mAngleY < -0.08f) {
-                    mAngleY += 0.04f;
-                }
+//                if (mAngleX < 0.08f) {
+//                    mAngleX += 0.04f;
+//                }
+//                if (mAngleY < 0.08f) {
+//                    mAngleY += 0.04f;
+//                }
             }
             processTouch();
         }
