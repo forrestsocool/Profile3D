@@ -16,5 +16,14 @@ Material Design风格，android sdk >=19
 <img src="https://raw.githubusercontent.com/sm1314/Profile3D/master/screenshot/3.jpg" width="400px" />
 
 ## 数据接口
-后端restful api，url定义在MyApplication中
+后端restful api，url定义在MyApplication中，具体接口定义见后端project
+
+## 特点
+- 1.分辨率自适应，在50寸+的大屏终端显示效果较好
+- 2.使用了较多自定义view，人机界面友好（强行凑2条）
+
+## 参考
+开发过程中使用了多几个优秀的开源lib库，3D cloud界面修改自下面的项目
+- https://github.com/misakuo/3dTagCloudAndroid
+
 
