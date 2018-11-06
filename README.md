@@ -7,13 +7,13 @@
 Material Design风格，android sdk >=19
 
 ### 3D Cloud主界面
-![Image text](https://raw.githubusercontent.com/sm1314/Profile3D/master/screenshot/1.jpg)
+<img src="https://raw.githubusercontent.com/sm1314/Profile3D/master/screenshot/1.jpg" width="400px" />
 
 ### 搜索界面
-![Image text](https://raw.githubusercontent.com/sm1314/Profile3D/master/screenshot/2.jpg)
+<img src="https://raw.githubusercontent.com/sm1314/Profile3D/master/screenshot/2.jpg" width="400px" />
 
 ### 个人信息界面
-![Image text](https://raw.githubusercontent.com/sm1314/Profile3D/master/screenshot/3.jpg)
+<img src="https://raw.githubusercontent.com/sm1314/Profile3D/master/screenshot/3.jpg" width="400px" />
 
 ## 数据接口
 后端restful api，url定义在MyApplication中
