@@ -1,5 +1,5 @@
 # Profile3D
-一个酷炫的带3D cloud效果的人员信息展示app，同时有开源的基于springboot的后端数据管理系统，是一个完整的作品。
+一个酷炫的带3D cloud效果的人员信息展示app，类似Soul App的主界面（其实反编译soul就会发现它的主界面和Profile3D是基于同一个库修改实现的），同时有开源的基于springboot的后端数据管理系统，是一个完整的作品。
 后端见： https://github.com/sm1314/hrmsys
 
 ## 介绍
