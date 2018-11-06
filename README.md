@@ -23,9 +23,7 @@ Material Design风格，android sdk >=19
 - 2.使用了较多自定义view，人机界面友好（强行凑2条）
 
 ## 参考
-开发过程中使用了多几个优秀的开源lib库
-3D cloud界面修改自下面的项目
+开发过程中使用了多几个优秀的开源项目，在此表示感谢！
 - https://github.com/misakuo/3dTagCloudAndroid
-分辨率自适应使用了下面的库：
 - https://github.com/JessYanCoding/AndroidAutoSize
-
+- https://github.com/IntruderShanky/Frisson
