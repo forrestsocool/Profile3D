@@ -18,12 +18,12 @@ public class MyApplication extends Application {
     public List<String> deptList;
     public List<String> posiList;
     public List<String> yearList;
-//    public static String BASE_URL = "http://23.25.4.84:8080/api";
-//    public static String EMPLOYEE_GET_URL = "http://23.25.4.84:8080/api/empl";
+    public static String BASE_URL = "http://23.25.4.84:8080/api";
+    public static String EMPLOYEE_GET_URL = "http://23.25.4.84:8080/api/empl";
 //    public static String BASE_URL = "http://192.168.1.8:8080/api";
 //    public static String EMPLOYEE_GET_URL = "http://192.168.1.8:8080/api/empl";
-    public static String BASE_URL = "http://172.96.241.34:8080/api";
-    public static String EMPLOYEE_GET_URL = "http://172.96.241.34:8080/api/empl";
+    //public static String BASE_URL = "http://172.96.241.34:8080/api";
+    //public static String EMPLOYEE_GET_URL = "http://172.96.241.34:8080/api/empl";
     @Override
     public void onCreate() {
         super.onCreate();

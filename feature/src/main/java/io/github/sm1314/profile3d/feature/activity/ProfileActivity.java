@@ -1,46 +1,26 @@
 package io.github.sm1314.profile3d.feature.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
-import android.os.Looper;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.gson.Gson;
 import com.intrusoft.library.FrissonView;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
 import io.github.sm1314.profile3d.feature.GlideApp;
 import io.github.sm1314.profile3d.feature.MyApplication;
 import io.github.sm1314.profile3d.feature.R;
-import io.github.sm1314.profile3d.feature.adapter.TextTagsAdapter;
-import io.github.sm1314.profile3d.feature.adapter.VectorTagsAdapter;
-import io.github.sm1314.profile3d.feature.adapter.ViewTagsAdapter;
 import io.github.sm1314.profile3d.feature.model.Employee;
-import io.github.sm1314.tagcloudlib.view.TagCloudView;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 
@@ -52,6 +32,8 @@ public class ProfileActivity extends BaseActivity {
     private FrissonView frissonView;
     private Bitmap avatarBitmap;
     private Handler mHandler;
+    private ImageButton imageButtonClose;
+    private LinearLayout llEmplInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +42,9 @@ public class ProfileActivity extends BaseActivity {
         //设置彩色statusbar
         setStatusBar(R.color.colorPrimary);
         //设置返回按钮
-        findViewById(R.id.view_back).setClickable(true);
-        findViewById(R.id.view_back).setOnClickListener(new View.OnClickListener() {
+        imageButtonClose = findViewById(R.id.view_back);
+        imageButtonClose.setClickable(true);
+        imageButtonClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ProfileActivity.this.finish();
@@ -70,7 +53,8 @@ public class ProfileActivity extends BaseActivity {
         //获取传参
         Intent intent = this.getIntent();
         employee = (Employee) intent.getParcelableExtra("employee");
-
+        frissonView = findViewById(R.id.wave_head);
+        llEmplInfo = findViewById(R.id.ll_info);
     }
 
     @Override
@@ -89,15 +73,18 @@ public class ProfileActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
 
+        setUpAvatar();
+
         Handler mHandler = new Handler(this.getMainLooper());
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 setUpContent();
+                imageButtonClose.bringToFront();
+                llEmplInfo.bringToFront();
             }
-        }, 500);
-
-        setUpAvatar();
+        }, 1500);
+        //frissonView.bringToFront();
     }
 
     @Override
@@ -155,7 +142,7 @@ public class ProfileActivity extends BaseActivity {
 //                .placeholder(R.drawable.placeholder)
 //                into(imageView);
         //setCrossFadeEnabled
-        GlideApp.with(this).load(uri).circleCrop().placeholder(employee.getSex().equals("女")? R.drawable.women : R.drawable.man).circleCrop().transition(withCrossFade(1000)).into(imageView);
+        GlideApp.with(this).load(uri).circleCrop().placeholder(employee.getSex().contains("女")? R.drawable.women : R.drawable.man).circleCrop().transition(withCrossFade(1000)).into(imageView);
         //Glide.with(this)
     }
 

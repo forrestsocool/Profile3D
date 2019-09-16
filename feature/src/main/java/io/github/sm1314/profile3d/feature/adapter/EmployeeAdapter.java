@@ -78,7 +78,7 @@ public class EmployeeAdapter extends BaseTurboAdapter<Employee, BaseViewHolder> 
 //            ((EmployeeHolder) holder).empl_avatar.setHierarchy(hierarchy);
 
 
-            GlideApp.with(context).load(uri).circleCrop().placeholder(item.getSex().equals("女")? R.drawable.women : R.drawable.man).circleCrop().into(((EmployeeHolder) holder).image_avatar);
+            GlideApp.with(context).load(uri).circleCrop().placeholder(item.getSex().contains("女")? R.drawable.women : R.drawable.man).circleCrop().into(((EmployeeHolder) holder).image_avatar);
 
             //设置点击效果
             ((EmployeeHolder) holder).itemView.setOnClickListener(new View.OnClickListener() {

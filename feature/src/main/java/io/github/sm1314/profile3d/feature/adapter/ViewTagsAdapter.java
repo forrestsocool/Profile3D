@@ -129,7 +129,7 @@ public class ViewTagsAdapter extends TagsAdapter {
 
 
         ImageView ivAvatar = (ImageView) view.findViewById(R.id.iv_avatar_small);
-        GlideApp.with(context).load(uri).circleCrop().placeholder(employee.getSex().equals("女")? R.drawable.women : R.drawable.man).circleCrop().into(ivAvatar);
+        GlideApp.with(context).load(uri).circleCrop().placeholder(employee.getSex().contains("女")? R.drawable.women : R.drawable.man).circleCrop().into(ivAvatar);
 
 
         //设置点击回调

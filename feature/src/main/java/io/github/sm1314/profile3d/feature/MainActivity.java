@@ -181,10 +181,11 @@ public class MainActivity extends BaseActivity implements SearchFragment.OnFragm
         Call call = okHttpClient.newCall(request);                                               //3.使用client去请求
         call.enqueue(new Callback() {                                                           //4.回调方法
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(Call call, final IOException e) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_LONG).show();
                         findViewById(R.id.tv_noresult).setVisibility(View.VISIBLE);
                         findViewById(R.id.spin_kit).setVisibility(View.INVISIBLE);
                     }
